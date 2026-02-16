@@ -5,167 +5,249 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Địa danh nổi tiếng Long An</title>
     <style>
-        /* Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* --- 1. CẤU HÌNH CHUNG --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            background-color: #f9f9f9;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f2f5;
             color: #333;
+            line-height: 1.6;
         }
 
-        #container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 0 20px;
-        }
+        #container { max-width: 1000px; margin: 0 auto; padding: 20px; }
 
-        /* Thanh điều hướng */
+        /* --- 2. THANH ĐIỀU HƯỚNG --- */
         #Nav {
-            background-color: #007bff;
-            padding: 10px 0;
+            background: #007bff;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+        #Nav ul { display: flex; justify-content: center; list-style: none; }
+        #Nav ul li { margin: 0 15px; }
+        #Nav ul li a { color: white; text-decoration: none; font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
 
-        #Nav ul {
-            list-style: none;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        #Nav ul li {
-            margin: 5px 15px;
-        }
-
-        #Nav ul li a {
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            transition: color 0.3s;
-        }
-
-        #Nav ul li a:hover {
-            color: #ffdd57;
-        }
-
-        /* Banner */
+        /* --- 3. BANNER --- */
         #Banner {
-            background: url('https://upload.wikimedia.org/wikipedia/commons/6/6e/Long_An_rice_fields.jpg') center/cover no-repeat;
+            background: linear-gradient(135deg, #007bff, #0056b3);
             color: white;
             text-align: center;
-            padding: 60px 20px;
-            font-size: 1.8em;
+            padding: 50px 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 2rem;
             font-weight: bold;
-            border-radius: 8px;
-            margin-top: 15px;
         }
 
-        /* Nội dung */
-        #MainContent {
-            margin-top: 20px;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        /* --- 4. CẤU TRÚC SLIDESHOW --- */
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background: #ddd;
         }
 
-        #MainContent h2 {
-            color: #007bff;
-            margin-bottom: 10px;
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            cursor: zoom-in;
         }
 
-        #MainContent p {
-            margin-bottom: 15px;
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
         }
 
-        /* Footer */
-        #Footer {
-            margin-top: 30px;
-            padding: 15px;
-            text-align: center;
-            background-color: #007bff;
+        /* Nút qua lại */
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 16px;
             color: white;
-            border-radius: 8px;
+            font-weight: bold;
+            font-size: 20px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.3);
+            border: none;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            transition: 0.3s;
+        }
+        .next { right: 0; border-radius: 3px 0 0 3px; }
+        .prev:hover, .next:hover { background: rgba(0,0,0,0.8); }
+
+        /* --- 5. NỘI DUNG --- */
+        #MainContent {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
         }
 
-        #Footer a {
-            color: #ffdd57;
-            text-decoration: none;
+        .section-box { margin-bottom: 50px; }
+        h2 { color: #007bff; margin-bottom: 15px; border-left: 5px solid #007bff; padding-left: 15px; }
+
+        /* --- 6. LIGHTBOX (PHÓNG TO) --- */
+        #Lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            #Nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            #Nav ul li {
-                margin: 10px 0;
-            }
-
-            #MainContent {
-                padding: 15px;
-            }
-
-            #Banner {
-                font-size: 1.4em;
-                padding: 40px 15px;
-            }
+        #Lightbox img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+            animation: zoomAnim 0.3s ease;
         }
+
+        @keyframes zoomAnim { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .close-btn {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: white;
+            font-size: 50px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* --- 7. FOOTER --- */
+        #Footer {
+            background: #222;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #Footer a { color: #ffdd57; text-decoration: none; }
     </style>
 </head>
 <body>
+
+    <nav id="Nav">
+        <ul>
+            <li><a href="#PreView">Giới thiệu</a></li>
+            <li><a href="#about">Đặc sắc</a></li>
+            <li><a href="#Location">Vị trí</a></li>
+        </ul>
+    </nav>
+
     <div id="container">
-        <!-- Navigator -->
-        <div id="Nav">
-            <ul>
-                <li><a href="#PreView">Giới thiệu</a></li>
-                <li><a href="#about">Điểm đặc sắc</a></li>
-                <li><a href="#Location">Vị trí</a></li>
-                <li><a href="#MainContent">Nội dung</a></li>
-            </ul>
-        </div>
+        <header id="Banner">Khám Phá Long An</header>
 
-        <!-- Banner -->
-        <div id="Banner">Di tích Ngã ba Đức Hòa</div>
-
-        <!-- Nội dung -->
-        <div id="MainContent">
-            <div id="PreView">
+        <main id="MainContent">
+            <div id="PreView" class="section-box">
                 <h2>Giới thiệu về Long An</h2>
-                <p>Long An là một tỉnh nằm ở vùng đồng bằng sông Cửu Long, Việt Nam. Nơi đây nổi tiếng với những cánh đồng lúa bạt ngàn, hệ thống kênh rạch chằng chịt và nền văn hóa đặc sắc.</p>
+                <div class="slideshow-container" data-speed="4000">
+                    <div class="slide"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Long_An_rice_fields.jpg" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="https://vcdn1-dulich.vnecdn.net/2022/05/26/lang-noi-tan-lap-9378-1653554302.jpg" onclick="openLightbox(this.src)"></div>
+                    <button class="prev" onclick="changeSlide(this, -1)">&#10094;</button>
+                    <button class="next" onclick="changeSlide(this, 1)">&#10095;</button>
+                </div>
+                <p>Long An là cửa ngõ nối liền Đông Nam Bộ với Đồng bằng sông Cửu Long, nơi hội tụ vẻ đẹp của sông nước và những cánh đồng lúa chín vàng.</p>
             </div>
-            <div id="about">
-                <h2>Điểm đặc sắc của Long An</h2>
-                <p>Long An có nhiều di tích lịch sử, văn hóa và cảnh quan thiên nhiên phong phú, thu hút khách du lịch trong và ngoài nước.</p>
-            </div>
-            <div id="Location">
-                <h2>Vị trí</h2>
-                <p>Tỉnh Long An nằm ở cửa ngõ phía Tây Nam của TP. Hồ Chí Minh, thuận tiện cho việc đi lại và phát triển kinh tế.</p>
-            </div>
-            <div>
-                <h2>Nội dung</h2>
-                <p>Long An không chỉ nổi tiếng với cảnh đẹp mà còn với con người hiền hòa, mến khách, cùng nền ẩm thực đa dạng.</p>
-            </div>
-        </div>
 
-        <!-- Footer -->
-        <div id="Footer">
-            <p>Trường THPT chuyên Trần Văn Giàu</p>
-            <p>&copy; Nhóm 3: Ngọc Nghiêm, Khả Tú, Hữu Phước, Ngọc Duyên</p>
-            <p>Liên hệ: coder <a href="https://www.facebook.com/huu.phuoc.476536">Hữu Phước</a></p>
-        </div>
+            <div id="about" class="section-box">
+                <h2>Điểm đặc sắc của Long An</h2>
+                <div class="slideshow-container" data-speed="4000">
+                    <div class="slide"><img src="https://thamhiemmekong.com/wp-content/uploads/2020/07/canh-dep-long-an.jpg" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="https://i.ex-cdn.com/vntravellive.com/files/news/2022/06/07/lang-noi-tan-lap-trai-nghiem-sac-xanh-dong-thap-muoi-144510.jpg" onclick="openLightbox(this.src)"></div>
+                    <button class="prev" onclick="changeSlide(this, -1)">&#10094;</button>
+                    <button class="next" onclick="changeSlide(this, 1)">&#10095;</button>
+                </div>
+                <p>Nổi tiếng với Làng nổi Tân Lập, khu du lịch Cánh đồng bất tận và những di tích lịch sử hào hùng.</p>
+            </div>
+
+            <div id="Location" class="section-box">
+                <h2>Vị trí địa lý</h2>
+                <div class="slideshow-container" data-speed="4000">
+                    <div class="slide"><img src="https://longan.gov.vn/images/slidershow/2023/binhthanh.jpg" onerror="this.src='https://via.placeholder.com/800x400?text=Long+An+Binh+Thanh'" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="https://longan.gov.vn/images/slidershow/2023/can-duoc.jpg" onerror="this.src='https://via.placeholder.com/800x400?text=Long+An+Can+Duoc'" onclick="openLightbox(this.src)"></div>
+                    <button class="prev" onclick="changeSlide(this, -1)">&#10094;</button>
+                    <button class="next" onclick="changeSlide(this, 1)">&#10095;</button>
+                </div>
+                <p>Nằm sát cạnh TP. Hồ Chí Minh, Long An đóng vai trò quan trọng trong việc giao thương và phát triển du lịch sinh thái vùng ven.</p>
+            </div>
+        </main>
     </div>
+
+    <div id="Lightbox">
+        <span class="close-btn" onclick="closeLightbox()">&times;</span>
+        <img id="LightboxImg" src="">
+    </div>
+
+    <footer id="Footer">
+        <p><strong>Trường THPT chuyên Trần Văn Giàu</strong></p>
+        <p>&copy; Nhóm 3: Ngọc Nghiêm, Khả Tú, Hữu Phước, Ngọc Duyên</p>
+        <p>Coder: <a href="https://www.facebook.com/huu.phuoc.476536" target="_blank">Hữu Phước</a></p>
+    </footer>
+
+    <script>
+        // --- XỬ LÝ SLIDESHOW ---
+        const containers = document.querySelectorAll('.slideshow-container');
+        
+        containers.forEach(container => {
+            let slideIdx = 0;
+            const slides = container.querySelectorAll('.slide');
+            
+            function show(n) {
+                slides.forEach(s => s.style.display = "none");
+                slideIdx = (n + slides.length) % slides.length;
+                slides[slideIdx].style.display = "block";
+            }
+
+            // Tự động chuyển sau 4s
+            setInterval(() => show(++slideIdx), 4000);
+            
+            // Khởi tạo slide đầu tiên
+            show(0);
+
+            // Gán hàm cho nút bấm (dùng closure để giữ scope slideIdx)
+            container.querySelector('.prev').onclick = () => show(--slideIdx);
+            container.querySelector('.next').onclick = () => show(++slideIdx);
+        });
+
+        // --- XỬ LÝ PHÓNG TO (LIGHTBOX) ---
+        function openLightbox(src) {
+            const lightbox = document.getElementById('Lightbox');
+            const img = document.getElementById('LightboxImg');
+            img.src = src;
+            lightbox.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('Lightbox').style.display = 'none';
+        }
+
+        // Đóng khi bấm ra ngoài ảnh
+        window.onclick = function(event) {
+            const lightbox = document.getElementById('Lightbox');
+            if (event.target == lightbox) {
+                closeLightbox();
+            }
+        }
+    </script>
 </body>
 </html>
-
-
-
-
-36
