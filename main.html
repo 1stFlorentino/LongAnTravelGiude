@@ -54,7 +54,7 @@
         }
 
         .slide {
-            display: none;
+            display: none; /* JS sẽ điều khiển cái này */
             width: 100%;
             height: 100%;
             cursor: zoom-in;
@@ -64,7 +64,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
         }
 
         /* Nút qua lại */
@@ -79,11 +78,12 @@
             cursor: pointer;
             background: rgba(0,0,0,0.3);
             border: none;
-            border-radius: 0 3px 3px 0;
+            z-index: 10;
             user-select: none;
             transition: 0.3s;
         }
         .next { right: 0; border-radius: 3px 0 0 3px; }
+        .prev { left: 0; border-radius: 0 3px 3px 0; }
         .prev:hover, .next:hover { background: rgba(0,0,0,0.8); }
 
         /* --- 5. NỘI DUNG --- */
@@ -93,42 +93,33 @@
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.05);
         }
-
         .section-box { margin-bottom: 50px; }
         h2 { color: #007bff; margin-bottom: 15px; border-left: 5px solid #007bff; padding-left: 15px; }
 
-        /* --- 6. LIGHTBOX (PHÓNG TO) --- */
+        /* --- 6. LIGHTBOX --- */
         #Lightbox {
             display: none;
             position: fixed;
             z-index: 1000;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.9);
             backdrop-filter: blur(8px);
             justify-content: center;
             align-items: center;
         }
-
-        #Lightbox img {
+        #LightboxImg {
             max-width: 90%;
             max-height: 80%;
             border-radius: 10px;
-            box-shadow: 0 0 30px rgba(255,255,255,0.2);
             animation: zoomAnim 0.3s ease;
         }
-
         @keyframes zoomAnim { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
         .close-btn {
             position: absolute;
-            top: 30px;
-            right: 40px;
+            top: 30px; right: 40px;
             color: white;
             font-size: 50px;
-            font-weight: bold;
             cursor: pointer;
         }
 
@@ -140,7 +131,6 @@
             text-align: center;
             margin-top: 50px;
         }
-
         #Footer a { color: #ffdd57; text-decoration: none; }
     </style>
 </head>
@@ -148,6 +138,7 @@
 
     <nav id="Nav">
         <ul>
+            <li><a href="./index.html">Trang chủ</a></li>
             <li><a href="#PreView">Giới thiệu</a></li>
             <li><a href="#about">Đặc sắc</a></li>
             <li><a href="#Location">Vị trí</a></li>
@@ -160,35 +151,35 @@
         <main id="MainContent">
             <div id="PreView" class="section-box">
                 <h2>Giới thiệu về Long An</h2>
-                <div class="slideshow-container" data-speed="4000">
+                <div class="slideshow-container">
                     <div class="slide"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Long_An_rice_fields.jpg" onclick="openLightbox(this.src)"></div>
                     <div class="slide"><img src="https://vcdn1-dulich.vnecdn.net/2022/05/26/lang-noi-tan-lap-9378-1653554302.jpg" onclick="openLightbox(this.src)"></div>
-                    <button class="prev" onclick="changeSlide(this, -1)">&#10094;</button>
-                    <button class="next" onclick="changeSlide(this, 1)">&#10095;</button>
+                    <button class="prev">&#10094;</button>
+                    <button class="next">&#10095;</button>
                 </div>
-                <p>Long An là cửa ngõ nối liền Đông Nam Bộ với Đồng bằng sông Cửu Long, nơi hội tụ vẻ đẹp của sông nước và những cánh đồng lúa chín vàng.</p>
+                <p>Long An là cửa ngõ nối liền Đông Nam Bộ với Đồng bằng sông Cửu Long...</p>
             </div>
 
             <div id="about" class="section-box">
                 <h2>Điểm đặc sắc của Long An</h2>
-                <div class="slideshow-container" data-speed="4000">
+                <div class="slideshow-container">
                     <div class="slide"><img src="https://thamhiemmekong.com/wp-content/uploads/2020/07/canh-dep-long-an.jpg" onclick="openLightbox(this.src)"></div>
                     <div class="slide"><img src="https://i.ex-cdn.com/vntravellive.com/files/news/2022/06/07/lang-noi-tan-lap-trai-nghiem-sac-xanh-dong-thap-muoi-144510.jpg" onclick="openLightbox(this.src)"></div>
-                    <button class="prev" onclick="changeSlide(this, -1)">&#10094;</button>
-                    <button class="next" onclick="changeSlide(this, 1)">&#10095;</button>
+                    <button class="prev">&#10094;</button>
+                    <button class="next">&#10095;</button>
                 </div>
-                <p>Nổi tiếng với Làng nổi Tân Lập, khu du lịch Cánh đồng bất tận và những di tích lịch sử hào hùng.</p>
+                <p>Nổi tiếng với Làng nổi Tân Lập, khu du lịch Cánh đồng bất tận...</p>
             </div>
 
             <div id="Location" class="section-box">
                 <h2>Vị trí địa lý</h2>
-                <div class="slideshow-container" data-speed="4000">
-                    <div class="slide"><img src="https://longan.gov.vn/images/slidershow/2023/binhthanh.jpg" onerror="this.src='https://via.placeholder.com/800x400?text=Long+An+Binh+Thanh'" onclick="openLightbox(this.src)"></div>
-                    <div class="slide"><img src="https://longan.gov.vn/images/slidershow/2023/can-duoc.jpg" onerror="this.src='https://via.placeholder.com/800x400?text=Long+An+Can+Duoc'" onclick="openLightbox(this.src)"></div>
-                    <button class="prev" onclick="changeSlide(this, -1)">&#10094;</button>
-                    <button class="next" onclick="changeSlide(this, 1)">&#10095;</button>
+                <div class="slideshow-container">
+                    <div class="slide"><img src="https://longan.gov.vn/images/slidershow/2023/binhthanh.jpg" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="https://longan.gov.vn/images/slidershow/2023/can-duoc.jpg" onclick="openLightbox(this.src)"></div>
+                    <button class="prev">&#10094;</button>
+                    <button class="next">&#10095;</button>
                 </div>
-                <p>Nằm sát cạnh TP. Hồ Chí Minh, Long An đóng vai trò quan trọng trong việc giao thương và phát triển du lịch sinh thái vùng ven.</p>
+                <p>Nằm sát cạnh TP. Hồ Chí Minh, Long An đóng vai trò quan trọng...</p>
             </div>
         </main>
     </div>
@@ -204,50 +195,6 @@
         <p>Coder: <a href="https://www.facebook.com/huu.phuoc.476536" target="_blank">Hữu Phước</a></p>
     </footer>
 
-    <script>
-        // --- XỬ LÝ SLIDESHOW ---
-        const containers = document.querySelectorAll('.slideshow-container');
-        
-        containers.forEach(container => {
-            let slideIdx = 0;
-            const slides = container.querySelectorAll('.slide');
-            
-            function show(n) {
-                slides.forEach(s => s.style.display = "none");
-                slideIdx = (n + slides.length) % slides.length;
-                slides[slideIdx].style.display = "block";
-            }
-
-            // Tự động chuyển sau 4s
-            setInterval(() => show(++slideIdx), 4000);
-            
-            // Khởi tạo slide đầu tiên
-            show(0);
-
-            // Gán hàm cho nút bấm (dùng closure để giữ scope slideIdx)
-            container.querySelector('.prev').onclick = () => show(--slideIdx);
-            container.querySelector('.next').onclick = () => show(++slideIdx);
-        });
-
-        // --- XỬ LÝ PHÓNG TO (LIGHTBOX) ---
-        function openLightbox(src) {
-            const lightbox = document.getElementById('Lightbox');
-            const img = document.getElementById('LightboxImg');
-            img.src = src;
-            lightbox.style.display = 'flex';
-        }
-
-        function closeLightbox() {
-            document.getElementById('Lightbox').style.display = 'none';
-        }
-
-        // Đóng khi bấm ra ngoài ảnh
-        window.onclick = function(event) {
-            const lightbox = document.getElementById('Lightbox');
-            if (event.target == lightbox) {
-                closeLightbox();
-            }
-        }
-    </script>
+    <script src="./code.js"></script>
 </body>
 </html>

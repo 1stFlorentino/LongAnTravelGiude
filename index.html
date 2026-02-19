@@ -7,9 +7,9 @@
     <style>
         /* --- 1. CSS CƠ BẢN & RESPONSIVE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { height: 100%; width: 100%; font-family: 'Segoe UI', Arial, sans-serif; }
+        html, body { height: 100%; width: 100%; font-family: 'Segoe UI', Arial, sans-serif; overflow-x: hidden; }
 
-        /* Fix ảnh: Luôn lấp đầy, không bể, không tràn */
+        /* Slideshow cố định làm nền */
         .slideshow-container {
             position: fixed;
             top: 0; left: 0;
@@ -19,16 +19,15 @@
             background-color: #000;
         }
 
-        .mySlides { display: none; width: 100%; height: 100%; }
-
-        .mySlides img {
+        .slide { display: none; width: 100%; height: 100%; }
+        .slide img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Quan trọng: Giữ tỷ lệ ảnh, cắt bớt phần thừa thay vì kéo giãn */
+            object-fit: cover;
             object-position: center;
         }
 
-        /* --- 2. GIAO DIỆN --- */
+        /* --- 2. GIAO DIỆN CHÍNH --- */
         #container {
             min-height: 100vh;
             display: flex;
@@ -44,11 +43,12 @@
             max-width: 600px;
             text-align: center;
             color: white;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-radius: 20px;
             margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         #MainContent {
@@ -69,7 +69,6 @@
             font-size: 16px;
         }
 
-        /* Trạng thái nút Bắt đầu */
         .btn-start {
             background: #007bff;
             color: white;
@@ -85,13 +84,13 @@
             opacity: 0.7;
         }
 
-        /* --- 3. CUSTOM MODAL (Thay thế Alert) --- */
-        #customModal {
+        /* --- 3. MODAL & LIGHTBOX --- */
+        #customModal, #Lightbox {
             display: none;
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.8);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -105,32 +104,42 @@
             max-width: 400px;
             text-align: center;
             position: relative;
-            animation: slideDown 0.3s ease;
+        }
+
+        #LightboxImg {
+            max-width: 90%;
+            max-height: 80%;
+            border: 3px solid white;
+            border-radius: 5px;
         }
 
         .close-btn {
             position: absolute;
             top: 10px; right: 15px;
-            font-size: 24px;
+            font-size: 30px;
             cursor: pointer;
-            color: #666;
+            color: #fff;
         }
-
-        @keyframes slideDown {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        .modal-content .close-btn { color: #666; }
 
         .fade { animation: fadeAnim 1.5s; }
         @keyframes fadeAnim { from { opacity: 0.5; } to { opacity: 1; } }
+
+
+
+    #locationSelect option:disabled {
+        color: #ccc;
+        background-color: #f8f9fa;
+        font-style: italic;
+    }
     </style>
 </head>
 <body>
 
     <div class="slideshow-container">
-        <div class="mySlides fade"><img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80"></div>
-        <div class="mySlides fade"><img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&q=80"></div>
-        <div class="mySlides fade"><img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1920&q=80"></div>
+        <div class="slide fade"><img src="./pic/download1.jpg"></div>
+        <div class="slide fade"><img src="./pic/download2.jpg"></div>
+        <div class="slide fade"><img src="./pic/download3.jpg"></div>
     </div>
 
     <div id="container">
@@ -153,117 +162,6 @@
         </main>
     </div>
 
-    <div id="customModal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <p id="modalMessage" style="margin-top: 10px; color: #333; font-weight: 500;"></p>
-        </div>
-    </div>
-
-    <script>
-        // --- SLIDESHOW LOGIC ---
-        let slideIndex = 0;
-        function showSlides() {
-            let slides = document.getElementsByClassName("mySlides");
-            for (let i = 0; i < slides.length; i++) slides[i].style.display = "none";
-            slideIndex++;
-            if (slideIndex > slides.length) slideIndex = 1;
-            slides[slideIndex-1].style.display = "block";
-            setTimeout(showSlides, 4000); 
-        }
-        showSlides();
-
-        // --- DATA & LOGIC ---
-        const travelDatabase = {
-            "LongAn": {
-                tenTinh: "Long An",
-                locations: [
-                    { name: "Cánh đồng bất tận", status: true },
-                    { name: "Di tích Nhà Trăm cột", status: false },
-                    { name: "Làng nổi Tân Lập", status: true }
-                ]
-            },
-            "DaNang": {
-                tenTinh: "Đà Nẵng",
-                locations: [
-                    { name: "Cầu Rồng", status: true },
-                    { name: "Bà Nà Hills", status: true },
-                    { name: "Bán đảo Sơn Trà (Bảo trì)", status: false }
-                ]
-            }
-        };
-
-        const provinceSelect = document.getElementById('provinceSelect');
-        const locationSelect = document.getElementById('locationSelect');
-        const btnStart = document.getElementById('btnStart');
-
-        function loadProvinces() {
-            for (const key in travelDatabase) {
-                const option = document.createElement('option');
-                option.value = key;
-                option.text = travelDatabase[key].tenTinh;
-                provinceSelect.appendChild(option);
-            }
-        }
-
-        provinceSelect.onchange = function() {
-            locationSelect.innerHTML = '<option value="">-- Chọn địa điểm --</option>';
-            btnStart.disabled = false; // Reset trạng thái nút
-
-            if (!this.value) {
-                locationSelect.disabled = true;
-                return;
-            }
-
-            const locations = travelDatabase[this.value].locations;
-            locations.forEach(loc => {
-                const option = document.createElement('option');
-                option.value = loc.name;
-                option.text = loc.name + (loc.status ? "" : " (Đóng cửa)");
-                option.dataset.status = loc.status;
-                locationSelect.appendChild(option);
-            });
-            locationSelect.disabled = false;
-        };
-
-        // Bắt sự kiện thay đổi địa điểm để kiểm tra status
-        locationSelect.onchange = function() {
-            const selectedOption = this.options[this.selectedIndex];
-            if (selectedOption.dataset.status === "false") {
-                btnStart.disabled = true; // Vô hiệu hóa nút
-            } else {
-                btnStart.disabled = false;
-            }
-        };
-
-        // --- MODAL LOGIC ---
-        function showModal(msg) {
-            document.getElementById('modalMessage').innerText = msg;
-            document.getElementById('customModal').style.display = "flex";
-        }
-
-        function closeModal() {
-            document.getElementById('customModal').style.display = "none";
-        }
-
-        btnStart.onclick = function() {
-            if (!provinceSelect.value || !locationSelect.value) {
-                showModal("Vui lòng chọn đầy đủ thông tin trước khi bắt đầu!");
-                return;
-            }
-            
-            // Nếu nút không bị disabled thì chuyển trang
-            const url = `main.html?tinh=${provinceSelect.value}&place=${encodeURIComponent(locationSelect.value)}`;
-            window.location.href = url;
-        };
-
-        // Đóng modal khi click ra ngoài hộp thoại
-        window.onclick = function(event) {
-            let modal = document.getElementById('customModal');
-            if (event.target == modal) closeModal();
-        }
-
-        loadProvinces();
-    </script>
+    <script src="./code.js"></script>
 </body>
 </html>
